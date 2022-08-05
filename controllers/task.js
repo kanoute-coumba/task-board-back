@@ -1,17 +1,6 @@
 const Task = require('../models/Task')
 const fs = require('fs');
 
-/////////////////// Sans multer ////////////////////////
-// exports.createThing = (req, res, next) => {
-//     delete req.body._id;
-//     const thing = new Thing({
-//         ...req.body
-//     });
-//     thing.save()
-//     .then(() => res.status(201).json({ message : 'Objet enregistre!'}))
-//     .catch(error => res.status(400).json({error}))
-// }
-
 ///////////////////// avec multer ///////////////
 exports.createTask = (req, res, next) => {
     const taskObject = JSON.parse(req.body.task);
@@ -35,13 +24,6 @@ exports.createTask = (req, res, next) => {
             })
         })
 };
-
-////////////////// sans multer //////////////////////
-// exports.modifyThing = (req, res, next) => {
-//     Thing.updateOne({ _id: req.params.id}, { ...req.body, _id: req.params.id})
-//     .then(() => res.status(200).json({message : 'Objet modifié'}))
-//     .catch(error => res.status(400).json({error}))
-// }
 
 ////////////////////// avec multer ////////////////
 exports.modifyTask = (req, res, next) => {
@@ -82,13 +64,6 @@ exports.modifyTask = (req, res, next) => {
             });
         });
 };
-
-////////////// sans multer /////////////////////////
-// exports.deleteThing = (req, res, next) => {
-//     Thing.deleteOne({ _id: req.params.id})
-//     .then(() => res.status(200).json({message: 'Objet supprimé'}))
-//     .catch(error => res.status(400).json({error}))
-// }
 
 /////////////// avec multer et supprimer l'image qui va avec depuis notre serveur ///////////////////////////
 exports.deleteTask = (req, res, next) => {

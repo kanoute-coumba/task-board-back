@@ -1,25 +1,69 @@
 const mongoose =require('mongoose');
 const taskSchema = mongoose.Schema({
-    title: {
+
+    // const AccountType = {
+    //     ADMIN : 'ADMIN',
+    //     EMPLOYEE : 'EMPLOYEE'
+    // };
+    // const Priority = {
+    //     URGENT : 'URGENT',
+    //     SIMPLE : 'SIMPLE'
+    // };
+
+    // const Status = {
+    //     COMPLETE: 'COMPLETE',
+    //     PENDING : 'PENDING',
+    //     CANCELLED : 'CANCELLED'
+    // }
+
+    accountType : {
+        type: DataTypes.ENUM,
+        values: [
+            'Admin',
+            'Employee',
+        ],
+        defaultValue: 'Employee',
+        required: true
+    },
+    title : {
         type: String,
         required: true
     },
-    description: {
+    description : {
         type: String,
         required: true
     },
-    imageUrl: {
-        type: String,
+    deadline : {
+        type: dateTime,
         required: true
     },
-    userId :{
-        type: String,
+    priority : {
+        type: DataTypes.ENUM,
+        values: [
+            'Urgent',
+            'Simple',
+        ],
+        defaultValue: 'Simple',
         required: true
     },
-    price: {
-        type: String,
+    statut : {
+        type: DataTypes.ENUM,
+        values: [
+            'Complete',
+            'Pending',
+            'Cancelled'
+        ],
+        defaultValue: 'Simple',
         required: true
     },
+    assignTo : {
+        type: String,
+        require : true
+    },
+    createdBy : {
+        type : String,
+        require : true
+    }
 })
 
 module.exports = mongoose.model('Task', taskSchema)
