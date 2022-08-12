@@ -2,10 +2,11 @@ const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
 const userSchema = mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
   
   accountType: {
-    type: DataTypes.ENUM,
-    values: [
+    type: String,
+    enum : [
       'Admin',
       'Employee',
     ],

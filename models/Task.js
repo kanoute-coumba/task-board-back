@@ -1,54 +1,36 @@
-const mongoose =require('mongoose');
+const mongoose = require('mongoose');
+
 const taskSchema = mongoose.Schema({
-
-    // const AccountType = {
-    //     ADMIN : 'ADMIN',
-    //     EMPLOYEE : 'EMPLOYEE'
-    // };
-    // const Priority = {
-    //     URGENT : 'URGENT',
-    //     SIMPLE : 'SIMPLE'
-    // };
-
-    // const Status = {
-    //     COMPLETE: 'COMPLETE',
-    //     PENDING : 'PENDING',
-    //     CANCELLED : 'CANCELLED'
-    // }
-
-    accountType : {
-        type: DataTypes.ENUM,
-        values: [
-            'Admin',
-            'Employee',
-        ],
-        defaultValue: 'Employee',
+    _id: mongoose.Schema.Types.ObjectId,
+    accountType: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
-    title : {
+    title: {
         type: String,
         required: true
     },
-    description : {
+    description: {
         type: String,
         required: true
     },
-    deadline : {
-        type: dateTime,
+    deadline: {
+        type: Date,
         required: true
     },
-    priority : {
-        type: DataTypes.ENUM,
-        values: [
+    priority: {
+        type: String,
+        enum: [
             'Urgent',
             'Simple',
         ],
         defaultValue: 'Simple',
         required: true
     },
-    statut : {
-        type: DataTypes.ENUM,
-        values: [
+    statut: {
+        type: String,
+        enum: [
             'Complete',
             'Pending',
             'Cancelled'
@@ -56,14 +38,17 @@ const taskSchema = mongoose.Schema({
         defaultValue: 'Simple',
         required: true
     },
-    assignTo : {
-        type: String,
-        require : true
+    assignTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
-    createdBy : {
-        type : String,
-        require : true
-    }
+
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
 })
 
 module.exports = mongoose.model('Task', taskSchema)

@@ -61,113 +61,33 @@ exports.login = (req, res, next) => {
 
 exports.getAllUsers = (req, res, next) => {
     User.find()
-        .then(user => res.status(200).json(user))
-        .catch(error => res.status(400).json({
-            error
-        }))
-};
+      .then(users => res.status(200).json(users))
+      .catch(error => res.status(400).json({ error }));
+  }
 
 exports.getOneUser = (req, res, next) => {
-    User.findOne({
-            _id: req.params.id
-        })
-        .then(user => res.status(200).json(user))
-        .catch(error => res.status(400).json({
-            error
-        }))
-};
+    User.findOne({ _id: req.params.id })
+      .then(user => res.status(200).json(user))
+      .catch(error => res.status(404).json({ error }));
+  };
 
 exports.deleteUser = (req, res, next) => {
-    User.findOne({
-            _id: req.params.id
-        })
-        .then(user => {
-            if (user.userId != req.auth.userId) {
-                res.status(401).json({
-                    message: 'Not authorized'
-                });
-            } else {
-                const filename = task.imageUrl.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () => {
-                    User.deleteOne({
-                            _id: req.params.id
-                        })
-                        .then(() => {
-                            res.status(200).json({
-                                message: 'Employé supprimé !'
-                            })
-                        })
-                        .catch(error => res.status(401).json({
-                            error
-                        }));
-                });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                error
-            });
-        });
-};
-
+    User.deleteOne({ _id: req.params.id })
+      .then(() => res.status(200).json({ message: 'Utlisateur supprimé !'}))
+      .catch(error => res.status(400).json({ error }));
+  }
 exports.modifyUser = (req, res, next) => {
-    const userObject = req.file ? {
-        ...JSON.parse(req.body.user),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : {
-        ...req.body
-    };
-
-    delete userObject._userId;
-    User.findOne({
-            _id: req.params.id
-        })
-        .then((user) => {
-            if (user.userId != req.auth.userId) {
-                res.status(401).json({
-                    message: 'Not authorized'
-                });
-            } else {
-                User.updateOne({
-                        _id: req.params.id
-                    }, {
-                        ...userObject,
-                        _id: req.params.id
-                    })
-                    .then(() => res.status(200).json({
-                        message: 'Profil modifié!'
-                    }))
-                    .catch(error => res.status(401).json({
-                        error
-                    }));
-            }
-        })
-        .catch((error) => {
-            res.status(400).json({
-                error
-            });
-        });
-};
+    User.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+      .then(() => res.status(200).json({ message: 'utilisateur modifié !'}))
+      .catch(error => res.status(400).json({ error }));
+  }
 
 exports.createUser = (req, res, next) => {
-    const userObject = JSON.parse(req.body.user);
-    delete userObject._id;
-    delete userObject._userId;
+    delete req.body._id;
     const user = new User({
-        ...userObject,
-        userId: req.auth.userId,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      ...req.body
     });
-
     user.save()
-        .then(() => {
-            res.status(201).json({
-                message: 'Employé enregistrée !'
-            })
-        })
-        .catch(error => {
-            res.status(400).json({
-                error
-            })
-        })
-};
+      .then(() => res.status(201).json({ message: 'Utilisateur enregistré !'}))
+      .catch(error => res.status(400).json({ error }));
+  }

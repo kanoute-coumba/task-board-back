@@ -3,116 +3,36 @@ const fs = require('fs');
 
 ///////////////////// avec multer ///////////////
 exports.createTask = (req, res, next) => {
-    const taskObject = JSON.parse(req.body.task);
-    delete taskObject._id;
-    delete taskObject._userId;
+    delete req.body._id;
     const task = new Task({
-        ...taskObject,
-        userId: req.auth.userId,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      ...req.body
     });
-
     task.save()
-        .then(() => {
-            res.status(201).json({
-                message: 'Tache enregistrée !'
-            })
-        })
-        .catch(error => {
-            res.status(400).json({
-                error
-            })
-        })
-};
-
+      .then(() => res.status(201).json({ message: 'Tache enregistrée !'}))
+      .catch(error => res.status(400).json({ error }));
+  }
 ////////////////////// avec multer ////////////////
 exports.modifyTask = (req, res, next) => {
-    const taskObject = req.file ? {
-        ...JSON.parse(req.body.task),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : {
-        ...req.body
-    };
-
-    delete taskObject._userId;
-    Task.findOne({
-            _id: req.params.id
-        })
-        .then((task) => {
-            if (task.userId != req.auth.userId) {
-                res.status(401).json({
-                    message: 'Not authorized'
-                });
-            } else {
-                Task.updateOne({
-                        _id: req.params.id
-                    }, {
-                        ...taskObject,
-                        _id: req.params.id
-                    })
-                    .then(() => res.status(200).json({
-                        message: 'tache modifiée!'
-                    }))
-                    .catch(error => res.status(401).json({
-                        error
-                    }));
-            }
-        })
-        .catch((error) => {
-            res.status(400).json({
-                error
-            });
-        });
-};
+    Task.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+      .then(() => res.status(200).json({ message: 'Tache modifiée !'}))
+      .catch(error => res.status(400).json({ error }));
+  }
 
 /////////////// avec multer et supprimer l'image qui va avec depuis notre serveur ///////////////////////////
 exports.deleteTask = (req, res, next) => {
-    Task.findOne({
-            _id: req.params.id
-        })
-        .then(task => {
-            if (task.userId != req.auth.userId) {
-                res.status(401).json({
-                    message: 'Not authorized'
-                });
-            } else {
-                const filename = task.imageUrl.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () => {
-                    Task.deleteOne({
-                            _id: req.params.id
-                        })
-                        .then(() => {
-                            res.status(200).json({
-                                message: 'Objet supprimé !'
-                            })
-                        })
-                        .catch(error => res.status(401).json({
-                            error
-                        }));
-                });
-            }
-        })
-        .catch(error => {
-            res.status(500).json({
-                error
-            });
-        });
-};
+    Task.deleteOne({ _id: req.params.id })
+      .then(() => res.status(200).json({ message: 'Tache supprimée !'}))
+      .catch(error => res.status(400).json({ error }));
+  }
 
 exports.getOneTask = (req, res, next) => {
-    Task.findOne({
-            _id: req.params.id
-        })
-        .then(task => res.status(200).json(task))
-        .catch(error => res.status(400).json({
-            error
-        }))
-}
+    Task.findOne({ _id: req.params.id })
+      .then(user => res.status(200).json(user))
+      .catch(error => res.status(404).json({ error }));
+  }
 
 exports.getAllTasks = (req, res, next) => {
     Task.find()
-        .then(task => res.status(200).json(task))
-        .catch(error => res.status(400).json({
-            error
-        }))
-}
+      .then(users => res.status(200).json(users))
+      .catch(error => res.status(400).json({ error }));
+  }
