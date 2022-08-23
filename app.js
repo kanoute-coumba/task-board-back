@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded())
 mongoose.connect('mongodb+srv://coumba:passer@vuecrud.psuw6.mongodb.net/test?retryWrites=true&w=majority',
 { useNewUrlParser: true,
   useUnifiedTopology: true })
-.then(() => console.log('Connexion à MongoDB réussie !'))
-.catch(() => console.log('Connexion à MongoDB échouée !'));
+.then(() => console.log('Connected successfully to the database server!'))
+.catch(() => console.log('Connexion to the database failed!'));
 
 // app.use((req, res, next) => {
 //     res.setHeader('Access-Control-Allow-Origin', '*');

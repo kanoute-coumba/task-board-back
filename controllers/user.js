@@ -6,13 +6,23 @@ exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
+                accountType: req.body.accountType,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
                 email: req.body.email,
+                role: req.body.role,
                 password: hash
             });
             user.save()
-                .then(() => res.status(201).json({
-                    message: 'Votre compte employé créé !'
-                }))
+                .then((doc) => {
+                 const computedUser = user.toObject()
+                 delete computedUser.password
+                    res.status(201).json({
+                        statusCode:201,
+                        message: 'Votre compte employé créé !',
+                        data:computedUser
+                    })
+                })
                 .catch(error => res.status(400).json({
                     error
                 }));
@@ -29,14 +39,14 @@ exports.login = (req, res, next) => {
         .then(user => {
             if (user === null) {
                 res.status(401).json({
-                    message: 'Paire utilisateur / Mot de passe incorrecte'
+                    message: 'Utilisateur introuvable'
                 })
             } else {
                 bcrypt.compare(req.body.password, user.password)
                     .then(valid => {
                         if (!valid) {
                             retres.status(401).json({
-                                message: 'Paire utilisateur / Mot de passe incorrecte'
+                                message: 'Mot de passe incorrecte'
                             })
                         } else {
                             res.status(200).json({

@@ -1,32 +1,28 @@
 const mongoose = require('mongoose');
 
 const taskSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    accountType: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
+    // _id: mongoose.Schema.Types.ObjectId,
+    
     title: {
         type: String,
         required: true
     },
     description: {
         type: String,
-        required: true
+        // required: true
     },
     deadline: {
         type: Date,
-        required: true
+        // required: true
     },
     priority: {
         type: String,
         enum: [
-            'Urgent',
-            'Simple',
+            'URGENT',
+            'SIMPLE',
         ],
-        defaultValue: 'Simple',
-        required: true
+        defaultValue: 'SIMPLE',
+        // required: true
     },
     statut: {
         type: String,
@@ -35,20 +31,22 @@ const taskSchema = mongoose.Schema({
             'Pending',
             'Cancelled'
         ],
-        defaultValue: 'Simple',
-        required: true
+        defaultValue: 'Pending',
+        // required: true
     },
-    assignTo: {
+    assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        // defaultValue: '01',
         required: true
     },
 
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
-    },
+        // defaultValue: '01',
+        // required: true
+    }
 })
 
 module.exports = mongoose.model('Task', taskSchema)

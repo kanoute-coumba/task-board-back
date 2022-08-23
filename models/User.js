@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
 const userSchema = mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
+//   _id: mongoose.Schema.Types.ObjectId,
   
   accountType: {
     type: String,
@@ -11,15 +11,15 @@ const userSchema = mongoose.Schema({
       'Employee',
     ],
     defaultValue: 'Employee',
-    required: true
+    // required: true
   },
-  name: {
+  firstname: {
     type: String,
-    require: true
+    // require: true
   },
-  surname: {
+  lastname: {
     type: String,
-    require: true
+    // require: true
   },
   email: {
     type: String,
@@ -28,7 +28,7 @@ const userSchema = mongoose.Schema({
   },
   role: {
     type: String,
-    require: true
+    // require: true
   },
   password: {
     type: String,
